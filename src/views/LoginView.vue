@@ -18,7 +18,7 @@ async function handleSubmit() {
 
   try {
     login(form);
-    await router.push({ name: 'home' });
+    await router.push({ name: 'dashboard' });
   } catch (error) {
     errorMessage.value = error.message;
   } finally {
