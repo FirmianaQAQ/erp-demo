@@ -31,7 +31,7 @@ export const erpProcessOverview = [
   }
 ];
 
-export const erpMenuTree = [
+const rawMenuTree = [
   {
     key: 'base',
     title: '基础资料',
@@ -398,6 +398,17 @@ export const erpMenuTree = [
   }
 ];
 
+export const erpMenuTree = rawMenuTree.map((group) => ({
+  ...group,
+  children: group.children.map((item) => ({
+    ...item,
+    groupKey: group.key,
+    groupTitle: group.title,
+    routeName: `menu-${item.key}`,
+    routePath: `/home/${group.key}/${item.key}`
+  }))
+}));
+
 export function getDefaultMenuItem() {
   return erpMenuTree[0].children[0];
 }
@@ -412,6 +423,14 @@ export function findMenuItemByKey(targetKey) {
   }
 
   return getDefaultMenuItem();
+}
+
+export function findMenuGroupByKey(targetKey) {
+  return erpMenuTree.find((group) => group.key === targetKey) || erpMenuTree[0];
+}
+
+export function getAllMenuItems() {
+  return erpMenuTree.flatMap((group) => group.children);
 }
 
 export function getMenuStats() {
