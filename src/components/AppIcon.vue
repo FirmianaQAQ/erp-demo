@@ -271,6 +271,70 @@ defineProps({
       />
     </template>
 
+    <template v-else-if="name === 'plus'">
+      <path
+        d="M12 5V19M5 12H19"
+        :stroke-width="strokeWidth"
+        stroke="currentColor"
+        stroke-linecap="round"
+      />
+    </template>
+
+    <template v-else-if="name === 'menu'">
+      <path
+        d="M4 7H20M4 12H20M4 17H20"
+        :stroke-width="strokeWidth"
+        stroke="currentColor"
+        stroke-linecap="round"
+      />
+    </template>
+
+    <template v-else-if="name === 'chevron-right'">
+      <path
+        d="M9 6L15 12L9 18"
+        :stroke-width="strokeWidth"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </template>
+
+    <template v-else-if="name === 'chevron-down'">
+      <path
+        d="M6 9L12 15L18 9"
+        :stroke-width="strokeWidth"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </template>
+
+    <template v-else-if="name === 'phone'">
+      <path
+        d="M6.8 4.8H9L10.2 8.5L8.8 10C9.6 11.7 10.9 13 12.6 13.8L14.1 12.4L17.8 13.6V15.8C17.8 16.7 17.1 17.4 16.2 17.4C10.9 17.1 6.5 12.7 6.2 7.4C6.2 6.5 5.5 5.8 6.8 4.8Z"
+        :stroke-width="strokeWidth"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </template>
+
+    <template v-else-if="name === 'mail'">
+      <path
+        d="M4 6H20V18H4V6Z"
+        :stroke-width="strokeWidth"
+        stroke="currentColor"
+        stroke-linejoin="round"
+      />
+      <path
+        d="M4 7L12 13L20 7"
+        :stroke-width="strokeWidth"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </template>
+
     <template v-else-if="name === 'settings'">
       <path
         d="M12 8.5A3.5 3.5 0 1 0 12 15.5A3.5 3.5 0 1 0 12 8.5Z"

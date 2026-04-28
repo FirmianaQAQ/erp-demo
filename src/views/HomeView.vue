@@ -1,24 +1,38 @@
 <script setup>
+import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import AdminSidebar from '../components/admin/AdminSidebar.vue';
 import AdminTopbar from '../components/admin/AdminTopbar.vue';
 import { logout } from '../utils/auth';
 
 const router = useRouter();
+const sidebarCollapsed = ref(false);
+
+const bodyStyle = computed(() => ({
+  gridTemplateColumns: sidebarCollapsed.value ? '84px minmax(0, 1fr)' : '296px minmax(0, 1fr)'
+}));
 
 async function handleLogout() {
   logout();
   await router.push({ name: 'login' });
+}
+
+function toggleSidebar() {
+  sidebarCollapsed.value = !sidebarCollapsed.value;
 }
 </script>
 
 <template>
   <main class="page page-home">
     <section class="home-layout">
-      <AdminTopbar @logout="handleLogout" />
+      <AdminTopbar
+        :sidebar-collapsed="sidebarCollapsed"
+        @logout="handleLogout"
+        @toggle-sidebar="toggleSidebar"
+      />
 
-      <div class="home-layout__body">
-        <AdminSidebar />
+      <div class="home-layout__body" :style="bodyStyle">
+        <AdminSidebar :collapsed="sidebarCollapsed" />
 
         <section class="home-layout__content">
           <router-view />
@@ -42,12 +56,12 @@ async function handleLogout() {
 
 .home-layout__body {
   display: grid;
-  grid-template-columns: 272px minmax(0, 1fr);
-  min-height: calc(100vh - 76px);
+  min-height: calc(100vh - 90px);
+  transition: grid-template-columns 0.2s ease;
 }
 
 .home-layout__content {
   min-width: 0;
-  padding: 28px;
+  padding: 24px;
 }
 </style>

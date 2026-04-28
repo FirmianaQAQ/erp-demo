@@ -13,6 +13,11 @@ const menuRoutes = getAllMenuItems().map((item) => ({
   props: {
     groupKey: item.groupKey,
     menuKey: item.key
+  },
+  meta: {
+    title: item.title,
+    breadcrumb: item.breadcrumb.join(' / '),
+    groupTitle: item.groupTitle
   }
 }));
 
@@ -45,7 +50,11 @@ const router = createRouter({
         {
           path: 'dashboard',
           name: 'dashboard',
-          component: DashboardPage
+          component: DashboardPage,
+          meta: {
+            title: '首页',
+            breadcrumb: '首页'
+          }
         },
         ...menuRoutes
       ]

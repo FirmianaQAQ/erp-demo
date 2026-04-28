@@ -398,31 +398,61 @@ const rawMenuTree = [
   }
 ];
 
-export const erpMenuTree = rawMenuTree.map((group) => ({
-  ...group,
-  children: group.children.map((item) => ({
-    ...item,
-    groupKey: group.key,
-    groupTitle: group.title,
-    routeName: `menu-${item.key}`,
-    routePath: `/home/${group.key}/${item.key}`
-  }))
-}));
+function countLeafNodes(nodes) {
+  return nodes.reduce((count, node) => {
+    if (node.children?.length) {
+      return count + countLeafNodes(node.children);
+    }
+
+    return count + 1;
+  }, 0);
+}
+
+const flatMenuItems = [];
+
+export const erpMenuTree = rawMenuTree.map((group) => {
+  const stageMap = new Map();
+  const stageNodes = [];
+
+  group.children.forEach((item) => {
+    if (!stageMap.has(item.stage)) {
+      const stageNode = {
+        key: `${group.key}-stage-${stageNodes.length + 1}`,
+        title: item.stage,
+        groupKey: group.key,
+        groupTitle: group.title,
+        children: []
+      };
+
+      stageMap.set(item.stage, stageNode);
+      stageNodes.push(stageNode);
+    }
+
+    const mappedItem = {
+      ...item,
+      groupKey: group.key,
+      groupTitle: group.title,
+      routeName: `menu-${item.key}`,
+      routePath: `/home/${group.key}/${item.key}`,
+      breadcrumb: [group.title, item.stage, item.title]
+    };
+
+    stageMap.get(item.stage).children.push(mappedItem);
+    flatMenuItems.push(mappedItem);
+  });
+
+  return {
+    ...group,
+    children: stageNodes
+  };
+});
 
 export function getDefaultMenuItem() {
-  return erpMenuTree[0].children[0];
+  return flatMenuItems[0];
 }
 
 export function findMenuItemByKey(targetKey) {
-  for (const group of erpMenuTree) {
-    const matched = group.children.find((item) => item.key === targetKey);
-
-    if (matched) {
-      return matched;
-    }
-  }
-
-  return getDefaultMenuItem();
+  return flatMenuItems.find((item) => item.key === targetKey) || getDefaultMenuItem();
 }
 
 export function findMenuGroupByKey(targetKey) {
@@ -430,13 +460,19 @@ export function findMenuGroupByKey(targetKey) {
 }
 
 export function getAllMenuItems() {
-  return erpMenuTree.flatMap((group) => group.children);
+  return flatMenuItems;
+}
+
+export function getGroupMenuCount(groupKey) {
+  const group = findMenuGroupByKey(groupKey);
+
+  return countLeafNodes(group.children);
 }
 
 export function getMenuStats() {
   return {
     moduleCount: erpMenuTree.length,
-    menuCount: erpMenuTree.reduce((count, group) => count + group.children.length, 0),
+    menuCount: flatMenuItems.length,
     processCount: erpProcessOverview.length
   };
 }

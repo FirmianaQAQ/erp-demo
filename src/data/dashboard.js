@@ -37,6 +37,118 @@ export const dashboardCards = [
   }
 ];
 
+export const dashboardShortcuts = [
+  {
+    key: 'asset-depreciation',
+    title: '资产折旧表',
+    icon: 'function',
+    tone: 'teal'
+  },
+  {
+    key: 'subject-balance',
+    title: '科目余额表',
+    icon: 'home',
+    tone: 'blue'
+  },
+  {
+    key: 'voucher-amount',
+    title: '资产明细余额表',
+    icon: 'finance',
+    tone: 'amber'
+  },
+  {
+    key: 'general-ledger',
+    title: '总账',
+    icon: 'dashboard',
+    tone: 'cyan'
+  },
+  {
+    key: 'sub-ledger',
+    title: '辅助余额表',
+    icon: 'planning',
+    tone: 'indigo'
+  },
+  {
+    key: 'timing-ledger',
+    title: '序时账',
+    icon: 'reports',
+    tone: 'sky'
+  },
+  {
+    key: 'asset-card',
+    title: '资产卡片',
+    icon: 'purchase',
+    tone: 'emerald'
+  },
+  {
+    key: 'subject-assist',
+    title: '科目(辅助)余额表',
+    icon: 'base',
+    tone: 'mint'
+  },
+  {
+    key: 'account-analysis',
+    title: '账龄分析',
+    icon: 'dashboard',
+    tone: 'azure'
+  },
+  {
+    key: 'add-more',
+    title: '添加更多',
+    icon: 'plus',
+    tone: 'ghost'
+  }
+];
+
+export const dashboardWorkspace = {
+  title: '财务（Y）',
+  company: '投资集团有限公司',
+  department: '投资集团有限公司',
+  badge: '财'
+};
+
+export const dashboardTodoList = [
+  {
+    title: '财务底稿待复核',
+    code: 'SJ-2026-0418',
+    owner: '王颖',
+    deadline: '今天 18:00'
+  },
+  {
+    title: '固定资产折旧差异校验',
+    code: 'ZJ-2026-0421',
+    owner: '赵坤',
+    deadline: '04-29 10:30'
+  },
+  {
+    title: '总账期末结转确认',
+    code: 'GL-2026-0428',
+    owner: '陈思',
+    deadline: '04-30 16:00'
+  }
+];
+
+export const dashboardInitiatedList = [
+  {
+    title: '科目余额分析任务',
+    code: 'FA-2026-0407',
+    status: '执行中',
+    updatedAt: '2 小时前'
+  },
+  {
+    title: '银行余额调节表复核',
+    code: 'CW-2026-0415',
+    status: '待审批',
+    updatedAt: '今天 09:20'
+  },
+  {
+    title: '应收账龄专项检查',
+    code: 'YS-2026-0420',
+    status: '已提交',
+    updatedAt: '昨天 17:42'
+  }
+];
+
 export const dashboardNotices = [
   {
     title: '本周需完成采购需求与生产需求联动校验',
