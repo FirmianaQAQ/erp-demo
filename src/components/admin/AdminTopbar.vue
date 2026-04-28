@@ -3,6 +3,11 @@ import { computed } from 'vue';
 import { useRoute } from 'vue-router';
 import AppIcon from '../AppIcon.vue';
 import { getStoredUser } from '../../utils/auth';
+import {
+  findMenuItemByRouteName,
+  getFirstMenuItemByGroup,
+  getFirstMenuItemByStage
+} from '../../data/erpMenu';
 
 defineProps({
   sidebarCollapsed: {
@@ -16,7 +21,52 @@ defineEmits(['logout', 'toggle-sidebar']);
 const route = useRoute();
 const user = computed(() => getStoredUser());
 const currentTitle = computed(() => route.meta.title || '首页');
-const currentBreadcrumb = computed(() => route.meta.breadcrumb || '首页');
+const currentBreadcrumb = computed(() => {
+  if (route.name === 'dashboard') {
+    return [
+      {
+        label: '首页',
+        to: { name: 'dashboard' },
+        current: true
+      }
+    ];
+  }
+
+  const currentMenu = findMenuItemByRouteName(route.name);
+
+  if (!currentMenu) {
+    return [
+      {
+        label: currentTitle.value,
+        to: null,
+        current: true
+      }
+    ];
+  }
+
+  const groupEntry = getFirstMenuItemByGroup(currentMenu.groupKey);
+  const stageEntry = getFirstMenuItemByStage(currentMenu.groupKey, currentMenu.stageKey);
+
+  return [
+    {
+      label: '首页',
+      to: { name: 'dashboard' }
+    },
+    {
+      label: currentMenu.groupTitle,
+      to: { name: groupEntry.routeName }
+    },
+    {
+      label: currentMenu.stageTitle,
+      to: { name: stageEntry.routeName }
+    },
+    {
+      label: currentMenu.title,
+      to: { name: currentMenu.routeName },
+      current: true
+    }
+  ];
+});
 </script>
 
 <template>
@@ -29,8 +79,13 @@ const currentBreadcrumb = computed(() => route.meta.breadcrumb || '首页');
           aria-label="切换菜单"
           @click="$emit('toggle-sidebar')"
         >
-          <AppIcon name="menu" :size="18" />
-          <span>菜单</span>
+          <span class="admin-topbar__menu-icon">
+            <AppIcon name="menu" :size="16" />
+          </span>
+          <span class="admin-topbar__menu-copy">
+            <strong>{{ sidebarCollapsed ? '展开菜单' : '收起菜单' }}</strong>
+            <small>{{ sidebarCollapsed ? '显示导航' : '专注内容' }}</small>
+          </span>
         </button>
 
         <div class="admin-topbar__brand">
@@ -81,7 +136,31 @@ const currentBreadcrumb = computed(() => route.meta.breadcrumb || '首页');
         </span>
         <div class="admin-topbar__crumb-copy">
           <strong>{{ currentTitle }}</strong>
-          <span>{{ currentBreadcrumb }}</span>
+          <nav class="admin-topbar__breadcrumb" aria-label="面包屑">
+            <template v-for="(item, index) in currentBreadcrumb" :key="`${item.label}-${index}`">
+              <RouterLink
+                v-if="item.to"
+                class="admin-topbar__breadcrumb-link"
+                :class="{ 'admin-topbar__breadcrumb-link-current': item.current }"
+                :to="item.to"
+              >
+                {{ item.label }}
+              </RouterLink>
+              <span
+                v-else
+                class="admin-topbar__breadcrumb-link admin-topbar__breadcrumb-link-current"
+              >
+                {{ item.label }}
+              </span>
+
+              <span
+                v-if="index < currentBreadcrumb.length - 1"
+                class="admin-topbar__breadcrumb-separator"
+              >
+                /
+              </span>
+            </template>
+          </nav>
         </div>
       </div>
 
@@ -125,24 +204,59 @@ const currentBreadcrumb = computed(() => route.meta.breadcrumb || '首页');
 }
 
 .admin-topbar__menu {
-  min-width: 102px;
-  padding: 0 18px;
+  min-width: 148px;
+  padding: 0 16px 0 14px;
   border: none;
   border-right: 1px solid rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.08);
+  background: transparent;
   color: #ffffff;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
   gap: 10px;
-  font-size: 15px;
-  font-weight: 600;
+  text-align: left;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.admin-topbar__menu:hover {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.1));
+}
+
+.admin-topbar__menu-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.16);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.admin-topbar__menu-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.admin-topbar__menu-copy strong,
+.admin-topbar__menu-copy small {
+  display: block;
+}
+
+.admin-topbar__menu-copy strong {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.admin-topbar__menu-copy small {
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .admin-topbar__brand {
   min-width: 0;
-  padding-left: 20px;
-  gap: 12px;
+  padding-left: 2px;
+  gap: 0px;
   color: #ffffff;
 }
 
@@ -150,7 +264,7 @@ const currentBreadcrumb = computed(() => route.meta.breadcrumb || '首页');
   width: 46px;
   height: 46px;
   border-radius: 4px;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08));
+  background: transparent;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -277,8 +391,8 @@ const currentBreadcrumb = computed(() => route.meta.breadcrumb || '首页');
 .admin-topbar__crumb-copy {
   min-width: 0;
   display: flex;
-  align-items: baseline;
-  gap: 10px;
+  flex-direction: column;
+  gap: 2px;
 }
 
 .admin-topbar__crumb-copy strong {
@@ -286,12 +400,37 @@ const currentBreadcrumb = computed(() => route.meta.breadcrumb || '首页');
   font-size: 14px;
 }
 
-.admin-topbar__crumb-copy span {
-  color: #94a3b8;
+.admin-topbar__breadcrumb {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.admin-topbar__breadcrumb-link,
+.admin-topbar__breadcrumb-separator {
   font-size: 12px;
+}
+
+.admin-topbar__breadcrumb-link {
+  color: #94a3b8;
+  text-decoration: none;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  transition: color 0.2s ease;
+}
+
+.admin-topbar__breadcrumb-link:hover {
+  color: #2563eb;
+}
+
+.admin-topbar__breadcrumb-link-current {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.admin-topbar__breadcrumb-separator {
+  color: #cbd5e1;
 }
 
 .admin-topbar__sub-action {

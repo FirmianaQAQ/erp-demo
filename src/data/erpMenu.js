@@ -432,6 +432,8 @@ export const erpMenuTree = rawMenuTree.map((group) => {
       ...item,
       groupKey: group.key,
       groupTitle: group.title,
+      stageKey: stageMap.get(item.stage).key,
+      stageTitle: item.stage,
       routeName: `menu-${item.key}`,
       routePath: `/home/${group.key}/${item.key}`,
       breadcrumb: [group.title, item.stage, item.title]
@@ -461,6 +463,21 @@ export function findMenuGroupByKey(targetKey) {
 
 export function getAllMenuItems() {
   return flatMenuItems;
+}
+
+export function findMenuItemByRouteName(routeName) {
+  return flatMenuItems.find((item) => item.routeName === routeName) || null;
+}
+
+export function getFirstMenuItemByGroup(groupKey) {
+  return flatMenuItems.find((item) => item.groupKey === groupKey) || getDefaultMenuItem();
+}
+
+export function getFirstMenuItemByStage(groupKey, stageKey) {
+  return (
+    flatMenuItems.find((item) => item.groupKey === groupKey && item.stageKey === stageKey) ||
+    getFirstMenuItemByGroup(groupKey)
+  );
 }
 
 export function getGroupMenuCount(groupKey) {

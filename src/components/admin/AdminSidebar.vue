@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import AppIcon from '../AppIcon.vue';
-import { erpMenuTree } from '../../data/erpMenu';
+import { erpMenuTree, getGroupMenuCount } from '../../data/erpMenu';
 
 defineProps({
   collapsed: {
@@ -52,6 +52,10 @@ function toggleNode(nodeKey) {
 
   expandedKeys.value = nextKeys;
 }
+
+function getStageMenuCount(stage) {
+  return stage.children?.length || 0;
+}
 </script>
 
 <template>
@@ -64,7 +68,9 @@ function toggleNode(nodeKey) {
         :to="{ name: 'dashboard' }"
         title="首页"
       >
-        <AppIcon name="dashboard" />
+        <span class="admin-sidebar__link-icon">
+          <AppIcon name="dashboard" />
+        </span>
         <span v-if="!collapsed">首页</span>
       </RouterLink>
     </div>
@@ -84,15 +90,19 @@ function toggleNode(nodeKey) {
           @click="toggleNode(group.key)"
         >
           <span class="admin-sidebar__group-main">
-            <AppIcon :name="groupIconMap[group.key]" />
+            <span class="admin-sidebar__group-icon">
+              <AppIcon :name="groupIconMap[group.key]" />
+            </span>
             <strong v-if="!collapsed">{{ group.title }}</strong>
           </span>
 
-          <AppIcon
-            v-if="!collapsed"
-            :name="isExpanded(group) ? 'chevron-down' : 'chevron-right'"
-            :size="16"
-          />
+          <span v-if="!collapsed" class="admin-sidebar__group-meta">
+            <span class="admin-sidebar__count-badge">{{ getGroupMenuCount(group.key) }}</span>
+            <AppIcon
+              :name="isExpanded(group) ? 'chevron-down' : 'chevron-right'"
+              :size="16"
+            />
+          </span>
         </button>
 
         <div v-if="!collapsed && isExpanded(group)" class="admin-sidebar__branch-list">
@@ -107,10 +117,15 @@ function toggleNode(nodeKey) {
               @click="toggleNode(stage.key)"
             >
               <span>{{ stage.title }}</span>
-              <AppIcon
-                :name="isExpanded(stage) ? 'chevron-down' : 'chevron-right'"
-                :size="14"
-              />
+              <span class="admin-sidebar__branch-meta">
+                <span class="admin-sidebar__count-badge admin-sidebar__count-badge-sub">
+                  {{ getStageMenuCount(stage) }}
+                </span>
+                <AppIcon
+                  :name="isExpanded(stage) ? 'chevron-down' : 'chevron-right'"
+                  :size="14"
+                />
+              </span>
             </button>
 
             <div v-if="isExpanded(stage)" class="admin-sidebar__links">
@@ -121,6 +136,7 @@ function toggleNode(nodeKey) {
                 :class="{ 'admin-sidebar__link-active': route.name === item.routeName }"
                 :to="{ name: item.routeName }"
               >
+                <span class="admin-sidebar__leaf-dot"></span>
                 <span>{{ item.title }}</span>
               </RouterLink>
             </div>
@@ -135,7 +151,8 @@ function toggleNode(nodeKey) {
 .admin-sidebar {
   padding: 18px 14px;
   border-right: 1px solid #e5e7eb;
-  background: #ffffff;
+  background:
+    linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -150,21 +167,30 @@ function toggleNode(nodeKey) {
 .admin-sidebar__group,
 .admin-sidebar__branch,
 .admin-sidebar__links,
-.admin-sidebar__branch-list {
+.admin-sidebar__branch-list,
+.admin-sidebar__group-meta,
+.admin-sidebar__branch-meta {
   display: flex;
-  flex-direction: column;
 }
 
 .admin-sidebar__section,
 .admin-sidebar__group {
+  flex-direction: column;
   gap: 10px;
 }
 
+.admin-sidebar__branch,
+.admin-sidebar__links,
+.admin-sidebar__branch-list {
+  flex-direction: column;
+}
+
 .admin-sidebar__caption {
-  padding: 0 10px;
-  color: #9ca3af;
-  font-size: 12px;
+  padding: 0 12px;
+  color: #94a3b8;
+  font-size: 11px;
   font-weight: 700;
+  letter-spacing: 0.08em;
 }
 
 .admin-sidebar__group-title,
@@ -184,13 +210,15 @@ function toggleNode(nodeKey) {
 .admin-sidebar__group-title,
 .admin-sidebar__branch-title {
   padding: 0 10px;
-  border-radius: 12px;
-  background: transparent;
+  border-radius: 14px;
+  background: #ffffff;
   color: #374151;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
+  box-shadow: inset 0 0 0 1px #edf2f7;
+  transition: background 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
 }
 
 .admin-sidebar__group-main {
@@ -200,26 +228,67 @@ function toggleNode(nodeKey) {
   gap: 10px;
 }
 
+.admin-sidebar__group-icon,
+.admin-sidebar__link-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #eef5ff 0%, #e0edff 100%);
+  color: #2563eb;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
 .admin-sidebar__group-title strong {
   font-size: 14px;
 }
 
-.admin-sidebar__branch-list {
+.admin-sidebar__group-meta,
+.admin-sidebar__branch-meta {
+  align-items: center;
   gap: 8px;
+  color: #94a3b8;
+}
+
+.admin-sidebar__count-badge {
+  min-width: 22px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #eff6ff;
+  color: #2563eb;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-sidebar__count-badge-sub {
+  background: #f8fafc;
+  color: #64748b;
+}
+
+.admin-sidebar__branch-list {
+  gap: 10px;
 }
 
 .admin-sidebar__branch {
   margin-left: 10px;
-  padding-left: 10px;
-  border-left: 1px solid #e5e7eb;
-  gap: 6px;
+  padding-left: 14px;
+  border-left: 1px solid #e2e8f0;
+  gap: 8px;
 }
 
 .admin-sidebar__branch-title {
-  min-height: 34px;
-  padding: 0 8px;
+  min-height: 36px;
+  padding: 0 10px;
   color: #6b7280;
   font-size: 13px;
+  background: #f8fbff;
+  box-shadow: inset 0 0 0 1px #edf2f7;
 }
 
 .admin-sidebar__links {
@@ -227,18 +296,24 @@ function toggleNode(nodeKey) {
 }
 
 .admin-sidebar__link {
+  position: relative;
   min-height: 38px;
-  padding: 0 12px 0 18px;
-  border-radius: 10px;
+  padding: 0 12px 0 16px;
+  border-radius: 12px;
   color: #374151;
   display: flex;
   align-items: center;
+  gap: 10px;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 .admin-sidebar__link-static {
   justify-content: flex-start;
   gap: 10px;
   padding-left: 10px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow: inset 0 0 0 1px #edf2f7;
 }
 
 .admin-sidebar-collapsed .admin-sidebar__link-static,
@@ -247,15 +322,41 @@ function toggleNode(nodeKey) {
   padding-inline: 0;
 }
 
+.admin-sidebar__leaf-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #cbd5e1;
+  flex-shrink: 0;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
 .admin-sidebar__group-title:hover,
 .admin-sidebar__branch-title:hover,
 .admin-sidebar__link:hover {
-  background: #f6f8fb;
+  background: #f8fbff;
+  color: #1d4ed8;
+}
+
+.admin-sidebar__group-title:hover,
+.admin-sidebar__branch-title:hover {
+  box-shadow: inset 0 0 0 1px #dbeafe;
 }
 
 .admin-sidebar__link-active {
-  background: #e8f1ff;
+  background: linear-gradient(90deg, #eff6ff 0%, #e8f1ff 100%);
   color: #2563eb;
   font-weight: 700;
+  box-shadow: inset 3px 0 0 #3b82f6;
+}
+
+.admin-sidebar__link-active .admin-sidebar__leaf-dot {
+  background: #2563eb;
+  transform: scale(1.15);
+}
+
+.admin-sidebar-collapsed .admin-sidebar__link-icon,
+.admin-sidebar-collapsed .admin-sidebar__group-icon {
+  margin: 0;
 }
 </style>
