@@ -35,7 +35,11 @@ function toggleSidebar() {
         <AdminSidebar :collapsed="sidebarCollapsed" />
 
         <section class="home-layout__content">
-          <router-view />
+          <router-view v-slot="{ Component, route }">
+            <Transition name="page-switch" mode="out-in" appear>
+              <component :is="Component" :key="route.fullPath" />
+            </Transition>
+          </router-view>
         </section>
       </div>
     </section>
@@ -63,5 +67,21 @@ function toggleSidebar() {
 .home-layout__content {
   min-width: 0;
   padding: 24px;
+  position: relative;
+}
+
+.page-switch-enter-active,
+.page-switch-leave-active {
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease,
+    filter 0.22s ease;
+}
+
+.page-switch-enter-from,
+.page-switch-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+  filter: blur(2px);
 }
 </style>
