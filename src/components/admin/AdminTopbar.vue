@@ -83,8 +83,7 @@ const currentBreadcrumb = computed(() => {
             <AppIcon name="menu" :size="16" />
           </span>
           <span class="admin-topbar__menu-copy">
-            <strong>{{ sidebarCollapsed ? '展开菜单' : '收起菜单' }}</strong>
-            <small>{{ sidebarCollapsed ? '显示导航' : '专注内容' }}</small>
+            <strong>{{ sidebarCollapsed ? '菜单' : '菜单' }}</strong>
           </span>
         </button>
 
@@ -94,7 +93,6 @@ const currentBreadcrumb = computed(() => {
           </span>
           <div class="admin-topbar__brand-copy">
             <strong>ERP系统</strong>
-            <span>ERP SYS</span>
           </div>
         </div>
       </div>
@@ -204,7 +202,6 @@ const currentBreadcrumb = computed(() => {
 }
 
 .admin-topbar__menu {
-  min-width: 148px;
   padding: 0 16px 0 14px;
   border: none;
   border-right: 1px solid rgba(255, 255, 255, 0.18);

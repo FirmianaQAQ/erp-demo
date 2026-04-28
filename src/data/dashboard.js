@@ -42,61 +42,71 @@ export const dashboardShortcuts = [
     key: 'asset-depreciation',
     title: '资产折旧表',
     icon: 'function',
-    tone: 'teal'
+    tone: 'teal',
+    routeName: 'menu-asset-depreciation'
   },
   {
     key: 'subject-balance',
     title: '科目余额表',
     icon: 'home',
-    tone: 'blue'
+    tone: 'blue',
+    routeName: 'menu-subject-balance'
   },
   {
     key: 'voucher-amount',
     title: '资产明细余额表',
     icon: 'finance',
-    tone: 'amber'
+    tone: 'amber',
+    routeName: 'menu-asset-balance-detail'
   },
   {
     key: 'general-ledger',
     title: '总账',
     icon: 'dashboard',
-    tone: 'cyan'
+    tone: 'cyan',
+    routeName: 'menu-general-ledger'
   },
   {
     key: 'sub-ledger',
     title: '辅助余额表',
     icon: 'planning',
-    tone: 'indigo'
+    tone: 'indigo',
+    routeName: 'menu-assist-balance'
   },
   {
     key: 'timing-ledger',
     title: '序时账',
     icon: 'reports',
-    tone: 'sky'
+    tone: 'sky',
+    routeName: 'menu-timing-ledger'
   },
   {
     key: 'asset-card',
     title: '资产卡片',
     icon: 'purchase',
-    tone: 'emerald'
+    tone: 'emerald',
+    routeName: 'menu-asset-card'
   },
   {
     key: 'subject-assist',
     title: '科目(辅助)余额表',
     icon: 'base',
-    tone: 'mint'
+    tone: 'mint',
+    routeName: 'menu-subject-assist-balance'
   },
   {
     key: 'account-analysis',
     title: '账龄分析',
     icon: 'dashboard',
-    tone: 'azure'
+    tone: 'azure',
+    routeName: 'menu-account-aging'
   },
   {
     key: 'add-more',
     title: '添加更多',
     icon: 'plus',
-    tone: 'ghost'
+    tone: 'ghost',
+    routeName: 'menu-reports'
   }
 ];
 

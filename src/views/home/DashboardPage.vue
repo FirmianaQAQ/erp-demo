@@ -71,115 +71,6 @@ const processSnapshots = computed(() => {
         </button>
       </div>
     </div>
-
-    <section class="dashboard-page__overview-grid">
-      <article class="dashboard-page__panel dashboard-page__panel-span-2">
-        <header class="dashboard-page__panel-header">
-          <div class="dashboard-page__panel-title">
-            <AppIcon name="dashboard" />
-            <h3>快捷入口</h3>
-          </div>
-        </header>
-
-        <div class="dashboard-page__shortcut-grid">
-          <button
-            v-for="item in dashboardShortcuts"
-            :key="item.key"
-            class="dashboard-page__shortcut-item"
-            type="button"
-          >
-            <span
-              class="dashboard-page__shortcut-icon"
-              :class="`dashboard-page__shortcut-icon-${item.tone}`"
-            >
-              <AppIcon :name="item.icon" :size="18" />
-            </span>
-            <span class="dashboard-page__shortcut-label">{{ item.title }}</span>
-          </button>
-        </div>
-      </article>
-
-      <article class="dashboard-page__panel">
-        <header class="dashboard-page__panel-header">
-          <div class="dashboard-page__panel-title">
-            <AppIcon name="base" />
-            <h3>当前组织</h3>
-          </div>
-        </header>
-
-        <div class="dashboard-page__workspace-card">
-          <span class="dashboard-page__workspace-badge">{{ dashboardWorkspace.badge }}</span>
-          <div class="dashboard-page__workspace-copy">
-            <h4>{{ dashboardWorkspace.title }}</h4>
-            <p>{{ dashboardWorkspace.company }}</p>
-            <p>{{ dashboardWorkspace.department }}</p>
-          </div>
-        </div>
-      </article>
-    </section>
-
-    <section class="dashboard-page__board-grid">
-      <article class="dashboard-page__panel">
-        <header class="dashboard-page__panel-header">
-          <div class="dashboard-page__panel-title">
-            <AppIcon name="bell" />
-            <h3>我的待办</h3>
-          </div>
-
-          <div class="dashboard-page__panel-actions">
-            <button class="dashboard-page__panel-icon" type="button" aria-label="刷新待办">
-              <AppIcon name="refresh" :size="14" />
-            </button>
-            <button class="dashboard-page__panel-icon" type="button" aria-label="更多待办">
-              <AppIcon name="chevron-right" :size="14" />
-            </button>
-          </div>
-        </header>
-
-        <ul class="dashboard-page__task-list">
-          <li v-for="item in dashboardTodoList" :key="item.code" class="dashboard-page__task-item">
-            <div>
-              <strong>{{ item.title }}</strong>
-              <p>{{ item.code }} · {{ item.owner }}</p>
-            </div>
-            <span>{{ item.deadline }}</span>
-          </li>
-        </ul>
-      </article>
-
-      <article class="dashboard-page__panel">
-        <header class="dashboard-page__panel-header">
-          <div class="dashboard-page__panel-title">
-            <AppIcon name="flow" />
-            <h3>我的发起</h3>
-          </div>
-
-          <div class="dashboard-page__panel-actions">
-            <button class="dashboard-page__panel-icon" type="button" aria-label="刷新发起">
-              <AppIcon name="refresh" :size="14" />
-            </button>
-            <button class="dashboard-page__panel-icon" type="button" aria-label="更多发起">
-              <AppIcon name="chevron-right" :size="14" />
-            </button>
-          </div>
-        </header>
-
-        <ul class="dashboard-page__task-list">
-          <li
-            v-for="item in dashboardInitiatedList"
-            :key="item.code"
-            class="dashboard-page__task-item"
-          >
-            <div>
-              <strong>{{ item.title }}</strong>
-              <p>{{ item.code }} · {{ item.status }}</p>
-            </div>
-            <span>{{ item.updatedAt }}</span>
-          </li>
-        </ul>
-      </article>
-    </section>
-
     <section class="dashboard-page__metric-grid">
       <article
         v-for="card in dashboardCards"
@@ -264,26 +155,113 @@ const processSnapshots = computed(() => {
           </div>
         </div>
       </article>
+    </section>
+
+    <section class="dashboard-page__overview-grid">
+      <article class="dashboard-page__panel dashboard-page__panel-span-2">
+        <header class="dashboard-page__panel-header">
+          <div class="dashboard-page__panel-title">
+            <AppIcon name="dashboard" />
+            <h3>快捷入口</h3>
+          </div>
+        </header>
+
+        <div class="dashboard-page__shortcut-grid">
+          <RouterLink
+            v-for="item in dashboardShortcuts"
+            :key="item.key"
+            class="dashboard-page__shortcut-item"
+            :to="{ name: item.routeName }"
+          >
+            <span
+              class="dashboard-page__shortcut-icon"
+              :class="`dashboard-page__shortcut-icon-${item.tone}`"
+            >
+              <AppIcon :name="item.icon" :size="18" />
+            </span>
+            <span class="dashboard-page__shortcut-label">{{ item.title }}</span>
+          </RouterLink>
+        </div>
+      </article>
 
       <article class="dashboard-page__panel">
         <header class="dashboard-page__panel-header">
           <div class="dashboard-page__panel-title">
-            <AppIcon name="settings" />
-            <h3>流程阶段</h3>
+            <AppIcon name="base" />
+            <h3>当前组织</h3>
           </div>
         </header>
 
-        <div class="dashboard-page__detail-content">
-          <section
-            v-for="(group, index) in processSnapshots"
-            :key="group.key"
-            class="dashboard-page__detail-block"
-          >
-            <h5>{{ index + 1 }}. {{ group.title }}</h5>
-            <p>{{ group.stageSummary }}</p>
-            <span>{{ group.functionSummary }}</span>
-          </section>
+        <div class="dashboard-page__workspace-card">
+          <span class="dashboard-page__workspace-badge">{{ dashboardWorkspace.badge }}</span>
+          <div class="dashboard-page__workspace-copy">
+            <h4>{{ dashboardWorkspace.title }}</h4>
+            <p>{{ dashboardWorkspace.company }}</p>
+            <p>{{ dashboardWorkspace.department }}</p>
+          </div>
         </div>
+      </article>
+    </section>
+
+    <section class="dashboard-page__board-grid">
+      <article class="dashboard-page__panel">
+        <header class="dashboard-page__panel-header">
+          <div class="dashboard-page__panel-title">
+            <AppIcon name="bell" />
+            <h3>我的待办</h3>
+          </div>
+
+          <div class="dashboard-page__panel-actions">
+            <button class="dashboard-page__panel-icon" type="button" aria-label="刷新待办">
+              <AppIcon name="refresh" :size="14" />
+            </button>
+            <button class="dashboard-page__panel-icon" type="button" aria-label="更多待办">
+              <AppIcon name="chevron-right" :size="14" />
+            </button>
+          </div>
+        </header>
+
+        <ul class="dashboard-page__task-list">
+          <li v-for="item in dashboardTodoList" :key="item.code" class="dashboard-page__task-item">
+            <div>
+              <strong>{{ item.title }}</strong>
+              <p>{{ item.code }} · {{ item.owner }}</p>
+            </div>
+            <span>{{ item.deadline }}</span>
+          </li>
+        </ul>
+      </article>
+
+      <article class="dashboard-page__panel">
+        <header class="dashboard-page__panel-header">
+          <div class="dashboard-page__panel-title">
+            <AppIcon name="flow" />
+            <h3>我的发起</h3>
+          </div>
+
+          <div class="dashboard-page__panel-actions">
+            <button class="dashboard-page__panel-icon" type="button" aria-label="刷新发起">
+              <AppIcon name="refresh" :size="14" />
+            </button>
+            <button class="dashboard-page__panel-icon" type="button" aria-label="更多发起">
+              <AppIcon name="chevron-right" :size="14" />
+            </button>
+          </div>
+        </header>
+
+        <ul class="dashboard-page__task-list">
+          <li
+            v-for="item in dashboardInitiatedList"
+            :key="item.code"
+            class="dashboard-page__task-item"
+          >
+            <div>
+              <strong>{{ item.title }}</strong>
+              <p>{{ item.code }} · {{ item.status }}</p>
+            </div>
+            <span>{{ item.updatedAt }}</span>
+          </li>
+        </ul>
       </article>
     </section>
 
@@ -345,6 +323,26 @@ const processSnapshots = computed(() => {
             <strong>{{ item.value }}</strong>
             <p>{{ item.hint }}</p>
           </div>
+        </div>
+      </article>
+            <article class="dashboard-page__panel">
+        <header class="dashboard-page__panel-header">
+          <div class="dashboard-page__panel-title">
+            <AppIcon name="settings" />
+            <h3>流程阶段</h3>
+          </div>
+        </header>
+
+        <div class="dashboard-page__detail-content">
+          <section
+            v-for="(group, index) in processSnapshots"
+            :key="group.key"
+            class="dashboard-page__detail-block"
+          >
+            <h5>{{ index + 1 }}. {{ group.title }}</h5>
+            <p>{{ group.stageSummary }}</p>
+            <span>{{ group.functionSummary }}</span>
+          </section>
         </div>
       </article>
     </section>
@@ -536,15 +534,19 @@ const processSnapshots = computed(() => {
   border-radius: 14px;
   background: transparent;
   color: #111827;
+  text-decoration: none;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 10px;
+  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .dashboard-page__shortcut-item:hover {
   background: #f8fbff;
+  transform: translateY(-1px);
+  box-shadow: inset 0 0 0 1px #e0edff;
 }
 
 .dashboard-page__shortcut-icon {

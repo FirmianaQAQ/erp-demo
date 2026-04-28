@@ -386,6 +386,69 @@ const rawMenuTree = [
         functions: ['凭证生成', '账簿查询', '期末结账', '财务对账']
       },
       {
+        key: 'asset-depreciation',
+        title: '资产折旧表',
+        stage: '财务报表',
+        path: '财务管理 / 资产折旧表',
+        upstream: ['固定资产管理'],
+        downstream: ['总账管理'],
+        functions: ['折旧计提', '期间查询', '折旧试算', '折旧导出']
+      },
+      {
+        key: 'subject-balance',
+        title: '科目余额表',
+        stage: '财务报表',
+        path: '财务管理 / 科目余额表',
+        upstream: ['总账管理'],
+        downstream: ['经营复盘'],
+        functions: ['期间余额', '本期发生', '多账簿查询', '科目穿透']
+      },
+      {
+        key: 'asset-balance-detail',
+        title: '资产明细余额表',
+        stage: '财务报表',
+        path: '财务管理 / 资产明细余额表',
+        upstream: ['固定资产管理', '总账管理'],
+        downstream: ['经营复盘'],
+        functions: ['资产明细', '余额对照', '类别汇总', '导出打印']
+      },
+      {
+        key: 'assist-balance',
+        title: '辅助余额表',
+        stage: '财务报表',
+        path: '财务管理 / 辅助余额表',
+        upstream: ['总账管理'],
+        downstream: ['经营复盘'],
+        functions: ['辅助核算', '部门项目过滤', '余额穿透', '多维汇总']
+      },
+      {
+        key: 'timing-ledger',
+        title: '序时账',
+        stage: '财务报表',
+        path: '财务管理 / 序时账',
+        upstream: ['总账管理'],
+        downstream: ['经营复盘'],
+        functions: ['凭证序时', '日期筛选', '借贷明细', '来源追踪']
+      },
+      {
+        key: 'asset-card',
+        title: '资产卡片',
+        stage: '财务报表',
+        path: '财务管理 / 资产卡片',
+        upstream: ['固定资产管理'],
+        downstream: ['资产折旧表'],
+        functions: ['资产台账', '卡片查询', '状态跟踪', '变动历史']
+      },
+      {
+        key: 'subject-assist-balance',
+        title: '科目(辅助)余额表',
+        stage: '财务报表',
+        path: '财务管理 / 科目(辅助)余额表',
+        upstream: ['总账管理'],
+        downstream: ['经营复盘'],
+        functions: ['科目辅助组合', '余额分析', '维度联查', '余额导出']
+      },
+      {
         key: 'reports',
         title: '报表管理',
         stage: '经营分析',
@@ -393,6 +456,15 @@ const rawMenuTree = [
         upstream: ['总账管理'],
         downstream: ['经营复盘'],
         functions: ['经营看板', '采购分析', '生产分析', '财务报表']
+      },
+      {
+        key: 'account-aging',
+        title: '账龄分析',
+        stage: '经营分析',
+        path: '财务管理 / 账龄分析',
+        upstream: ['应收款管理', '应付账管理'],
+        downstream: ['经营复盘'],
+        functions: ['账龄区间', '逾期识别', '往来对账', '风险提示']
       }
     ]
   }
