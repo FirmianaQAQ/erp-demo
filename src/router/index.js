@@ -1,14 +1,27 @@
 import { createRouter, createWebHashHistory } from 'vue-router';
 import HomeView from '../views/HomeView.vue';
 import LoginView from '../views/LoginView.vue';
+import DashboardPage from '../views/home/DashboardPage.vue';
+import MenuPage from '../views/home/MenuPage.vue';
+import { getAllMenuItems } from '../data/erpMenu';
 import { getStoredUser } from '../utils/auth';
+
+const menuRoutes = getAllMenuItems().map((item) => ({
+  path: `${item.groupKey}/${item.key}`,
+  name: item.routeName,
+  component: MenuPage,
+  props: {
+    groupKey: item.groupKey,
+    menuKey: item.key
+  }
+}));
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes: [
     {
       path: '/',
-      redirect: '/home'
+      redirect: '/home/dashboard'
     },
     {
       path: '/login',
@@ -20,11 +33,22 @@ const router = createRouter({
     },
     {
       path: '/home',
-      name: 'home',
       component: HomeView,
       meta: {
         requiresAuth: true
-      }
+      },
+      children: [
+        {
+          path: '',
+          redirect: { name: 'dashboard' }
+        },
+        {
+          path: 'dashboard',
+          name: 'dashboard',
+          component: DashboardPage
+        },
+        ...menuRoutes
+      ]
     }
   ]
 });
@@ -37,7 +61,7 @@ router.beforeEach((to) => {
   }
 
   if (to.meta.requiresGuest && currentUser) {
-    return { name: 'home' };
+    return { name: 'dashboard' };
   }
 
   return true;
